@@ -33,7 +33,7 @@
         "zfcampus/zf-apigility": "^1.4",
         "zfcampus/zf-apigility-documentation": "^1.3",
         "zfcampus/zf-development-mode": "^3.2",
-        "doctrine/doctrine-module": "^2.1",
+        "doctrine/doctrine-orm-module": "^1.0.9",
         "doctrine/migrations": "^1.8"
     },
     "require-dev": {
@@ -52,7 +52,10 @@
     },
     "autoload": {
         "psr-4": {
-            "Application\\": "module/Application/src/"
+            "Application\\": "module/Application/src/",
+            "Core\\": "module/Core/src/",
+            "Auth\\": "module/Auth/src/",
+            "Scl\\": "module/Scl/src/"
         }
     },
     "autoload-dev": {
@@ -72,8 +75,9 @@
         "post-create-project-cmd": ["@development-enable"],
         "serve": "php -S 0.0.0.0:8080 -t public/",
         "test": "phpunit",
-        "migrations-generate": "php vendor/doctrine/migrations/bin/doctrine-migrations migrations:generate --configuration=migrations.xml --db-configuration=config/autoload/migrations-db.php",
-        "migrations-migrate": "php vendor/doctrine/migrations/bin/doctrine-migrations migrations:migrate --configuration=migrations.xml --db-configuration=config/autoload/migrations-db.php",
-        "migrations-status": "php vendor/doctrine/migrations/bin/doctrine-migrations migrations:status --configuration=migrations.xml --db-configuration=config/autoload/migrations-db.php"
+        "migrations-generate": "php vendor/bin/doctrine-module migrations:diff",
+        "migrations-execute": "php vendor/bin/doctrine-module migrations:execute",
+        "migrations-status": "php vendor/bin/doctrine-module migrations:status",
+        "sql": "php vendor/bin/doctrine-module orm:schema-tool:update --dump-sql"
     }
 }

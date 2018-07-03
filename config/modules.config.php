@@ -30,5 +30,9 @@ return [
     'ZF\Rpc',
     'ZF\Versioning',
     'DoctrineModule',
+    'DoctrineORMModule',
     'Application',
+    'Core',
+    'Auth',
+    'Scl'
 ];
