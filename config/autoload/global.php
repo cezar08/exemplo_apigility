@@ -13,11 +13,11 @@ return [
             'orm_default' => [
                 'driverClass' => \Doctrine\DBAL\Driver\PDOPgSql\Driver::class,
                 'params' => [
-                    'host' => 'crs.unochapeco.edu.br',
+                    'host' => 'localhost',
                     'port' => '5432',
-                    'user' => 'sis',
-                    'password' => 'Xpc04$10pos',
-                    'dbname' => 'db_crs_api',
+                    'user' => 'postgres',
+                    'password' => 'root',
+                    'dbname' => 'blog',
                 ],
             ],
         ],
