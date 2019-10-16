@@ -4,6 +4,7 @@ return [
         'factories' => [
             \BlogApi\V1\Rest\Users\UsersResource::class => \BlogApi\V1\Rest\Users\UsersResourceFactory::class,
             \BlogApi\V1\Rest\Posts\PostsResource::class => \BlogApi\V1\Rest\Posts\PostsResourceFactory::class,
+            \BlogApi\V1\Rest\Categories\CategoriesResource::class => \BlogApi\V1\Rest\Categories\CategoriesResourceFactory::class,
         ],
     ],
     'router' => [
@@ -26,12 +27,22 @@ return [
                     ],
                 ],
             ],
+            'blog-api.rest.categories' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/categories[/:categories_id]',
+                    'defaults' => [
+                        'controller' => 'BlogApi\\V1\\Rest\\Categories\\Controller',
+                    ],
+                ],
+            ],
         ],
     ],
     'zf-versioning' => [
         'uri' => [
             0 => 'blog-api.rest.users',
             1 => 'blog-api.rest.posts',
+            2 => 'blog-api.rest.categories',
         ],
     ],
     'zf-rest' => [
@@ -81,11 +92,34 @@ return [
             'collection_class' => \BlogApi\V1\Rest\Posts\PostsCollection::class,
             'service_name' => 'Posts',
         ],
+        'BlogApi\\V1\\Rest\\Categories\\Controller' => [
+            'listener' => \BlogApi\V1\Rest\Categories\CategoriesResource::class,
+            'route_name' => 'blog-api.rest.categories',
+            'route_identifier_name' => 'categories_id',
+            'collection_name' => 'categories',
+            'entity_http_methods' => [
+                0 => 'GET',
+                1 => 'PATCH',
+                2 => 'PUT',
+                3 => 'DELETE',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+                1 => 'POST',
+            ],
+            'collection_query_whitelist' => [],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \BlogApi\V1\Rest\Categories\CategoriesEntity::class,
+            'collection_class' => \BlogApi\V1\Rest\Categories\CategoriesCollection::class,
+            'service_name' => 'Categories',
+        ],
     ],
     'zf-content-negotiation' => [
         'controllers' => [
             'BlogApi\\V1\\Rest\\Users\\Controller' => 'Json',
             'BlogApi\\V1\\Rest\\Posts\\Controller' => 'Json',
+            'BlogApi\\V1\\Rest\\Categories\\Controller' => 'HalJson',
         ],
         'accept_whitelist' => [
             'BlogApi\\V1\\Rest\\Users\\Controller' => [
@@ -98,6 +132,11 @@ return [
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ],
+            'BlogApi\\V1\\Rest\\Categories\\Controller' => [
+                0 => 'application/vnd.blog-api.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
         ],
         'content_type_whitelist' => [
             'BlogApi\\V1\\Rest\\Users\\Controller' => [
@@ -105,6 +144,10 @@ return [
                 1 => 'application/json',
             ],
             'BlogApi\\V1\\Rest\\Posts\\Controller' => [
+                0 => 'application/vnd.blog-api.v1+json',
+                1 => 'application/json',
+            ],
+            'BlogApi\\V1\\Rest\\Categories\\Controller' => [
                 0 => 'application/vnd.blog-api.v1+json',
                 1 => 'application/json',
             ],
@@ -134,6 +177,18 @@ return [
                 'entity_identifier_name' => 'id',
                 'route_name' => 'blog-api.rest.posts',
                 'route_identifier_name' => 'posts_id',
+                'is_collection' => true,
+            ],
+            \BlogApi\V1\Rest\Categories\CategoriesEntity::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'blog-api.rest.categories',
+                'route_identifier_name' => 'categories_id',
+                'hydrator' => \Zend\Hydrator\ArraySerializable::class,
+            ],
+            \BlogApi\V1\Rest\Categories\CategoriesCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'blog-api.rest.categories',
+                'route_identifier_name' => 'categories_id',
                 'is_collection' => true,
             ],
         ],
@@ -279,6 +334,12 @@ return [
                 ],
                 'filters' => [],
                 'name' => 'id_user',
+            ],
+            5 => [
+                'required' => true,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'categories',
             ],
         ],
     ],

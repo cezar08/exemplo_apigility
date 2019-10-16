@@ -1,4 +1,6 @@
 <?php
+https://github.com/cezar08/exemplo_apigility
+
 
 namespace Blog\Service;
 
@@ -25,11 +27,24 @@ class PostService
         $data['date_post'] = new \DateTime('now');
         $data['user'] = $user;
         unset($data['id_user']);
+        $categories = $data['categories'];
+        unset($data['categories']);
         $post->setData($data);
+        $this->_addCategorie($post, $categories);
         $this->em->persist($post);
         $this->em->flush();
 
         return $post->getArrayCopy();
+    }
+
+    private function _addCategorie($post, $categories) 
+    {
+        foreach ($categories as $id_categorie) {
+            $categorie = $this->em->find('\Blog\Entity\Categorie', $id_categorie);
+            $post->categories->add($categorie);
+        }
+
+        return $post;
     }
 
     public function fetch($id)

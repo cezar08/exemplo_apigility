@@ -4,6 +4,7 @@ namespace Blog\Entity;
 
 use Core\Entity\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  *
@@ -67,15 +68,40 @@ class Post extends AbstractEntity
      */
     protected $date_post;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Categorie")
+     * @ORM\JoinTable(name="post_categories", 
+     *  joinColumns={@ORM\JoinColumn(name="id_post", referencedColumnName="id")},
+     *  inverseJoinColumns={@ORM\JoinColumn(name="id_categorie", 
+     *  referencedColumnName="id")}
+     * )
+     * 
+     * @var ArrayCollection
+     */
+    protected $categories;
+
+    public function __construct() 
+    {
+        $this->categories = new ArrayCollection();
+    }
+
     public function getArrayCopy()
     {
+
+        $categories = [];
+
+        foreach ($this->categories as $categorie) {
+            $categories[] = $categorie->getArrayCopy();
+        }
+
         return [
             'id' => $this->id,
             'user' => $this->user->getArrayCopy(),
             'title' => $this->title,
             'description' => $this->description,
             'text' => $this->text,
-            'data_post' => $this->date_post
+            'data_post' => $this->date_post,
+            'categories' => $categories
         ];
     }
 
